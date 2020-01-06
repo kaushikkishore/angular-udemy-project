@@ -1,14 +1,19 @@
-import { map, tap } from "rxjs/operators";
+import { map, tap, take, exhaustMap } from "rxjs/operators";
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { RecipeService } from "../recipes/recipe.service";
 import { Recipe } from "../recipes/recipe.model";
+import { AuthService } from "../auth/auth.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class DataStorageService {
-  constructor(private http: HttpClient, private recipeService: RecipeService) {}
+  constructor(
+    private http: HttpClient,
+    private recipeService: RecipeService,
+    private authService: AuthService
+  ) {}
 
   saveRecipe() {
     const recipes = this.recipeService.getRecipies();
@@ -23,7 +28,6 @@ export class DataStorageService {
   }
 
   fetchRecipe() {
-    console.log("Fetch recipe of data storage service called");
     return this.http
       .get<Recipe[]>(
         "https://ng-recipe-udemy-project.firebaseio.com/recipe.json"
